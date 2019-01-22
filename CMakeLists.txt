@@ -1,10 +1,17 @@
-cmake_minimum_required(VERSION 3.12)
+# TODO:
+# I kept the old makefiles for reference, but they won't be included in future commits
+# - doc (via doxygen)
+# - python module/package (?)
+
+cmake_minimum_required(VERSION 3.0)
 project(n2p2)
 
+# CXX language standard
 set(CMAKE_CXX_STANDARD 14)
 
-# Binaries
-set(N2P2_BIN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+# Bins & lib folders
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 # ====== Check if some dependencies are there ======
 # (1) MPI
@@ -30,93 +37,17 @@ include_directories(${GSL_INCLUDE_DIRS})
 
 # ===================================================
 
-include_directories(src/libnnp)
-include_directories(src/libnnpif)
-include_directories(src/libnnptrain)
+# Add subdirectory for libraries
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/libs)
 
-add_library(nnp STATIC
-        src/libnnp/Atom.cpp
-        src/libnnp/Atom.h
-        src/libnnp/CutoffFunction.cpp
-        src/libnnp/CutoffFunction.h
-        src/libnnp/Element.cpp
-        src/libnnp/Element.h
-        src/libnnp/ElementMap.cpp
-        src/libnnp/ElementMap.h
-        src/libnnp/Log.cpp
-        src/libnnp/Log.h
-        src/libnnp/Mode.cpp
-        src/libnnp/Mode.h
-        src/libnnp/NeuralNetwork.cpp
-        src/libnnp/NeuralNetwork.h
-        src/libnnp/Prediction.cpp
-        src/libnnp/Prediction.h
-        src/libnnp/Settings.cpp
-        src/libnnp/Settings.h
-        src/libnnp/SetupAnalysis.cpp
-        src/libnnp/SetupAnalysis.h
-        src/libnnp/Stopwatch.cpp
-        src/libnnp/Stopwatch.h
-        src/libnnp/Structure.cpp
-        src/libnnp/Structure.h
-        src/libnnp/SymmetryFunction.cpp
-        src/libnnp/SymmetryFunction.h
-        src/libnnp/SymmetryFunctionAngularNarrow.cpp
-        src/libnnp/SymmetryFunctionAngularNarrow.h
-        src/libnnp/SymmetryFunctionAngularWide.cpp
-        src/libnnp/SymmetryFunctionAngularWide.h
-        src/libnnp/SymmetryFunctionGroup.cpp
-        src/libnnp/SymmetryFunctionGroup.h
-        src/libnnp/SymmetryFunctionGroupAngularNarrow.cpp
-        src/libnnp/SymmetryFunctionGroupAngularNarrow.h
-        src/libnnp/SymmetryFunctionGroupAngularWide.cpp
-        src/libnnp/SymmetryFunctionGroupAngularWide.h
-        src/libnnp/SymmetryFunctionGroupRadial.cpp
-        src/libnnp/SymmetryFunctionGroupRadial.h
-        src/libnnp/SymmetryFunctionGroupWeightedAngular.cpp
-        src/libnnp/SymmetryFunctionGroupWeightedAngular.h
-        src/libnnp/SymmetryFunctionGroupWeightedRadial.cpp
-        src/libnnp/SymmetryFunctionGroupWeightedRadial.h
-        src/libnnp/SymmetryFunctionRadial.cpp
-        src/libnnp/SymmetryFunctionRadial.h
-        src/libnnp/SymmetryFunctionStatistics.cpp
-        src/libnnp/SymmetryFunctionStatistics.h
-        src/libnnp/SymmetryFunctionWeightedAngular.cpp
-        src/libnnp/SymmetryFunctionWeightedAngular.h
-        src/libnnp/SymmetryFunctionWeightedRadial.cpp
-        src/libnnp/SymmetryFunctionWeightedRadial.h
-        src/libnnp/utility.cpp
-        src/libnnp/utility.h
-        src/libnnp/Vec3D.h
-        src/libnnp/version.h
-        )
-
-add_library(nnpif SHARED
-        src/libnnpif/InterfaceLammps.cpp
-        src/libnnpif/InterfaceLammps.h
-        src/libnnpif/mpi-extra.h)
-
-add_library(nnptrain STATIC
-        src/libnnptrain/Dataset.cpp
-        src/libnnptrain/Dataset.h
-        src/libnnptrain/GradientDescent.cpp
-        src/libnnptrain/GradientDescent.h
-        src/libnnptrain/KalmanFilter.cpp
-        src/libnnptrain/KalmanFilter.h
-        src/libnnptrain/mpi-extra.h
-        src/libnnptrain/Training.cpp
-        src/libnnptrain/Training.h
-        src/libnnptrain/Updater.cpp
-        src/libnnptrain/Updater.h)
-# This must be linked to Eigen3
-target_link_libraries(nnptrain nnp Eigen3::Eigen ${GSL_LIBRARIES})
-
-# Test first executable: nnptrain
-add_executable(nnp-train
-        src/application/nnp-train/main.cpp)
-target_link_libraries(nnp-train nnptrain)
-
-# nnp-comp2
-add_executable(nnp-comp2
-        src/application/nnp-comp2/main.cpp)
-target_link_libraries(nnp-comp2 nnptrain)
+# Adding application executables
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB binaries ${CMAKE_CURRENT_SOURCE_DIR}/src/application/*.cpp)
+foreach(bin ${binaries})
+    get_filename_component(bin_name ${bin} NAME_WE)
+    get_filename_component(bin_dir ${bin} DIRECTORY)
+    #message(WARNING "Adding exe ${bin_name}")
+    add_executable(${bin_name} ${bin})
+    #target_include_directories(${bin_name} PUBLIC ${bin_dir})
+    target_link_libraries(${bin_name} nnptrain)
+endforeach(bin)
