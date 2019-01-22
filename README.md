@@ -8,7 +8,7 @@ network potentials in materials science.
 
 # Build
 
-This branch is a CMake-ready version of n2p2. Make you you have CMake v3.0 **at least** then:
+This branch is a CMake-ready (author: Edoardo Baldi, COSMO) version of n2p2. Make sure you have **at least** CMake v3.0 then:
 
 ```
 mkdir -p build; cd build
