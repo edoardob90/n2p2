@@ -6,6 +6,20 @@ n2p2 - The neural network potential package
 This repository provides ready-to-use software for high-dimensional neural
 network potentials in materials science.
 
+# Build
+
+This branch is a CMake-ready version of n2p2. Make you you have CMake v3.0 **at least** then:
+
+```
+mkdir -p build; cd build
+cmake ..
+make -j4
+```
+
+In the `build` directory there will be a `bin` and `lib` directories where the compiled executables/libraries are placed.
+
+CMake will automatically locate Eigen3 and GSL. If that doesn't work, it could mean that you have either library in a non-standard path. Use `-DCMAKE_PREFIX_PATH=<path/to/eigen/installdir>` and `-DGSL_ROOT_DIR=</path/to/gsl>` to supply additional info to CMake.
+
 # Documentation
 
 ## Online version
