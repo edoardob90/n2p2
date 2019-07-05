@@ -6,6 +6,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(n2p2)
 
+# Add local 'cmake' folder to module path
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+message(STATUS "Current CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+
 # CXX language standard
 set(CMAKE_CXX_STANDARD 14)
 
@@ -17,7 +22,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # (1) MPI
 # (2) Eigen template library
 # (3) GSL
-#
+# (4) MKL (if option USE_MKL=ON)
+
+# Options
+option(USE_MKL "Search and link against MKL. Fail if not found" OFF)
+
 # MPI
 find_package(MPI)
 if(MPI_CXX_FOUND)
@@ -34,6 +43,17 @@ find_package(Eigen3 3.0 REQUIRED NO_MODULE)
 find_package(GSL REQUIRED)
 message(STATUS "Found GNU Scientific Library. Version: ${GSL_VERSION}")
 include_directories(${GSL_INCLUDE_DIRS})
+
+# MKL libraries
+if(USE_MKL)
+    message(STATUS "Searching for Intel MKL")
+    find_package(MKL REQUIRED MODULE)
+    if(MKL_FOUND)
+        include_directories(${MKL_INCLUDE_DIR})
+    endif(MKL_FOUND)
+else(USE_MKL)
+    message(STATUS "Skipping search for Intel MKL")
+endif(USE_MKL)
 
 # ===================================================
 
