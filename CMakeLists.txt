@@ -57,11 +57,13 @@ endif(USE_MKL)
 
 # ===================================================
 
+# Include directiory containing all the header files
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # Add subdirectory for libraries
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/libs)
 
 # Adding application executables
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 file(GLOB binaries ${CMAKE_CURRENT_SOURCE_DIR}/src/application/*.cpp)
 foreach(bin ${binaries})
     get_filename_component(bin_name ${bin} NAME_WE)

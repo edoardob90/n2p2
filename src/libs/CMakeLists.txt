@@ -1,6 +1,7 @@
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnp)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnpif)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnptrain)
+# The following include_directories are useless as long as all the header files are kept in 'include' in project's main dir
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnp)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnpif)
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libnnptrain)
 
 # libnnp
 file(GLOB libnnp_srcs "${CMAKE_CURRENT_SOURCE_DIR}/libnnp/*.cpp")
