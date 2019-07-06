@@ -20,6 +20,12 @@ In the `build` directory there will be a `bin` and `lib` directories where the c
 
 CMake will automatically locate Eigen3 and GSL. If that doesn't work, it could mean that you have either library in a non-standard path. Use `-DCMAKE_PREFIX_PATH=<path/to/eigen/installdir>` and `-DGSL_ROOT_DIR=</path/to/gsl>` to supply additional info to CMake.
 
+## Options
+
+Set CMake option `USE_MKL` to `ON` to have CMake look for Intel MKL. Default is `OFF`.
+
+**Note:** with `USE_MKL=ON`, Intel MKL is treated as a **required** dependecy, so make sure you have set the enviroment variable `${MKLROOT}` properly.
+
 # Documentation
 
 ## Online version
