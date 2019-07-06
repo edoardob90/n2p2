@@ -7,7 +7,7 @@ file(GLOB libnnp_srcs "${CMAKE_CURRENT_SOURCE_DIR}/libnnp/*.cpp")
 add_library(nnp SHARED "${libnnp_srcs}")
 
 # libnnpif (LAMMPS interface library)
-#add_library(nnpif SHARED src/libnnpif/InterfaceLammps.cpp)
+add_library(nnpif SHARED "${CMAKE_CURRENT_SOURCE_DIR}/libnnpif/InterfaceLammps.cpp")
 
 # libnnptrain
 file(GLOB libnnptrain_srcs "${CMAKE_CURRENT_SOURCE_DIR}/libnnptrain/*.cpp")
